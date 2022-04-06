@@ -10,15 +10,18 @@ spec:
         memory: 1024M
     devices:
       disks:
-      - name: containerdisk
-        disk:
-          bus: virtio
-      - name: emptydisk
-        disk:
-          bus: virtio
-      - disk:
-          bus: virtio
-        name: cloudinitdisk
+        - name: containerdisk
+          disk:
+            bus: virtio
+        - name: emptydisk
+          disk:
+            bus: virtio
+        - disk:
+            bus: virtio
+          name: cloudinitdisk
+      interfaces:
+        - name: default
+          masquerade: {}
   volumes:
   - name: containerdisk
     containerDisk:
