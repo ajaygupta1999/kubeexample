@@ -14,12 +14,12 @@ spec:
       domain:
         devices:
           disks:
-          - disk:
-              bus: virtio
-            name: datavolumedisk1
-          interfaces:
-          - masquerade: {}
-            name: default
+            - name: containerdisk
+              disk:
+                bus: virtio
+            - name: cloudinitdisk
+              disk:
+                bus: virtio
         resources:
           requests:
             memory: 1Gi
@@ -28,21 +28,11 @@ spec:
       - name: default
         pod: {}
       volumes:
-      - dataVolume:
-          name: alpine-dv
-        name: datavolumedisk1
-  dataVolumeTemplates:
-  - metadata:
-      creationTimestamp: null
-      name: alpine-dv
-    spec:
-      pvc:
-        accessModes:
-        - ReadWriteMany
-        volumeMode: Block
-        resources:
-          requests:
-            storage: 1Gi
-      source:
-        registry:
-          url: docker://quay.io/kubevirt/alpine-container-disk-demo:v0.42.1
+        - name: containerdisk
+          containerDisk:
+            image: quay.io/kubevirt/alpine-container-disk-demo
+        - name: cloudinitdisk
+          cloudInitNoCloud:
+            userDataBase64: SGkuXG4=
+      
+  
