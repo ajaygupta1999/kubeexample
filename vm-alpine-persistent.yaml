@@ -1,48 +1,37 @@
 apiVersion: kubevirt.io/v1
 kind: VirtualMachine
 metadata:
-  labels:
-    kubevirt.io/vm: vm-alpine-persistent
-  name: vm-alpine-persistent
+  name: testvm
 spec:
   running: false
   template:
     metadata:
       labels:
-        kubevirt.io/vm: vm-alpine-persistent
+        kubevirt.io/size: small
+        kubevirt.io/domain: testvm
     spec:
       domain:
         devices:
           disks:
-          - disk:
-              bus: virtio
-            name: datavolumedisk1
+            - name: containerdisk
+              disk:
+                bus: virtio
+            - name: cloudinitdisk
+              disk:
+                bus: virtio
           interfaces:
-          - masquerade: {}
-            name: default
+          - name: default
+            masquerade: {}
         resources:
           requests:
-            memory: 500M
-      terminationGracePeriodSeconds: 0
+            memory: 2Gi
       networks:
       - name: default
         pod: {}
       volumes:
-      - dataVolume:
-          name: alpine-dv
-        name: datavolumedisk1
-  dataVolumeTemplates:
-  - metadata:
-      creationTimestamp: null
-      name: alpine-dv
-    spec:
-      pvc:
-        accessModes:
-        - ReadWriteMany
-        volumeMode: Block
-        resources:
-          requests:
-            storage: 300M
-      source:
-        registry:
-          url: docker://quay.io/kubevirt/alpine-container-disk-demo:v0.42.1
+        - name: containerdisk
+          containerDisk:
+            image: quay.io/kubevirt/cirros-container-disk-demo
+        - name: cloudinitdisk
+          cloudInitNoCloud:
+            userDataBase64: SGkuXG4=
