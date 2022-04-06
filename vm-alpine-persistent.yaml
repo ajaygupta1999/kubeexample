@@ -30,5 +30,5 @@ spec:
     emptyDisk:
       capacity: "1Gi"
   - name: cloudinitdisk
-      cloudInitNoCloud:
-        userDataBase64: SGkuXG4=
+    cloudInitNoCloud:
+      userDataBase64: SGkuXG4=
