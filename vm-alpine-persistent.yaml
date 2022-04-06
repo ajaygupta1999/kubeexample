@@ -30,7 +30,5 @@ spec:
     emptyDisk:
       capacity: "1Gi"
   - name: cloudinitdisk
-    cloudInitNoCloud:
-      userData: |-
-        password: fedora
-        chpasswd: { expire: False }
+      cloudInitNoCloud:
+        userDataBase64: SGkuXG4=
