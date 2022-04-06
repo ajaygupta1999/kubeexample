@@ -1,38 +1,33 @@
-apiVersion: kubevirt.io/v1
-kind: VirtualMachine
+apiVersion: kubevirt.io/v1alpha3
+kind: VirtualMachineInstance
 metadata:
-  labels:
-    kubevirt.io/vm: vm-alpine-persistent
-  name: vm-alpine-persistent
+  name: testvmi-nocloud
 spec:
-  running: true
-  template:
-    metadata:
-      labels:
-        kubevirt.io/vm: vm-alpine-persistent
-    spec:
-      domain:
-        devices:
-          disks:
-            - name: containerdisk
-              disk:
-                bus: virtio
-            - name: cloudinitdisk
-              disk:
-                bus: virtio
-        resources:
-          requests:
-            memory: 1Gi
-      terminationGracePeriodSeconds: 0
-      networks:
-      - name: default
-        pod: {}
-      volumes:
-        - name: containerdisk
-          containerDisk:
-            image: quay.io/kubevirt/alpine-container-disk-demo
-        - name: cloudinitdisk
-          cloudInitNoCloud:
-            userDataBase64: SGkuXG4=
-      
-  
+  terminationGracePeriodSeconds: 30
+  domain:
+    resources:
+      requests:
+        memory: 1024M
+    devices:
+      disks:
+      - name: containerdisk
+        disk:
+          bus: virtio
+      - name: emptydisk
+        disk:
+          bus: virtio
+      - disk:
+          bus: virtio
+        name: cloudinitdisk
+  volumes:
+  - name: containerdisk
+    containerDisk:
+      image: kubevirt/fedora-cloud-container-disk-demo:latest
+  - name: emptydisk
+    emptyDisk:
+      capacity: "1Gi"
+  - name: cloudinitdisk
+    cloudInitNoCloud:
+      userData: |-
+        password: fedora
+        chpasswd: { expire: False }
