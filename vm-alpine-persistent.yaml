@@ -5,7 +5,7 @@ metadata:
     kubevirt.io/vm: vm-alpine-persistent
   name: vm-alpine-persistent
 spec:
-  running: false
+  running: true
   template:
     metadata:
       labels:
